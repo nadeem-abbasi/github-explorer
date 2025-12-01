@@ -1,0 +1,30 @@
+.searchBar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  width: 100%;
+}
+
+.inputWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  flex: 1;
+}
+
+.error {
+  color: var(--color-error);
+  font-size: var(--font-size-sm);
+  padding-left: var(--spacing-sm);
+}
+
+@media (min-width: 768px) {
+  .searchBar {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .inputWrapper {
+    flex: 1;
+  }
+}

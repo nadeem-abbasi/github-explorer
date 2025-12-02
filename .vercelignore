@@ -1,0 +1,18 @@
+node_modules
+.git
+.storybook
+storybook-static
+coverage
+*.test.tsx
+*.test.ts
+*.stories.tsx
+__mocks__
+jest.config.js
+setupTests.ts
+
+# Environment files (should never be deployed)
+.env
+.env.local
+.env.production
+.env.development
+.env.*.local

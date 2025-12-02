@@ -2,7 +2,8 @@
 
 A modern, responsive React application for searching GitHub users and exploring their repositories. Built with React 19, TypeScript, and TanStack Query.
 
-🔗 **Live Demo:** [https://github-explorer-sage.vercel.app/](https://github-explorer-sage.vercel.app/)
+🔗 **Live Demo:** [https://github-explorer-sage.vercel.app/](https://github-explorer-sage.vercel.app/)  
+📚 **Storybook:** [https://github-explorer-sage.vercel.app/storybook/](https://github-explorer-sage.vercel.app/storybook/)
 
 ## 🏗️ Architecture
 

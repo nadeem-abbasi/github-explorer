@@ -23,11 +23,17 @@ function hasNextPage(linkHeader: string | null): boolean {
 
 const ERROR_HANDLERS: Record<
   number,
-  (operation: string, errorMessage: string) => string
+  (operation: string, errorMessage: string, response?: Response) => string
 > = {
   401: () => 'Authentication failed. Please check your GitHub token.',
-  403: () =>
-    'API rate limit exceeded. Please try again later or add a GitHub token for higher limits.',
+  403: (_, __, response) => {
+    // Check if it's actually a rate limit issue by inspecting headers
+    const remaining = response?.headers.get('X-RateLimit-Remaining');
+    if (remaining === '0') {
+      return 'API rate limit exceeded. Please try again later or add a GitHub token for higher limits.';
+    }
+    return 'Access forbidden. Please check your GitHub token permissions.';
+  },
   404: (operation) =>
     operation === 'search' ? 'No results found.' : 'User not found.',
   422: (_, errorMessage) =>
@@ -52,7 +58,7 @@ async function handleApiError(
 
   const handler = ERROR_HANDLERS[status];
   const message = handler
-    ? handler(operation, errorMessage)
+    ? handler(operation, errorMessage, response)
     : `Failed to ${operation}: ${
         errorMessage || statusText || 'Unknown error'
       }`;

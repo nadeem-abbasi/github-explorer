@@ -1,6 +1,7 @@
 export const GITHUB_API_BASE = 'https://api.github.com';
 export const DEFAULT_PER_PAGE_USERS = 30;
 export const DEFAULT_PER_PAGE_REPOS = 5;
+export const MAX_DISPLAYED_USERS = 5;
 export const REQUEST_TIMEOUT = 10000;
 
 export const QUERY_STALE_TIME = 1000 * 60 * 5;

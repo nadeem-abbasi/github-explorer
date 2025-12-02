@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { Error } from './Error';
 
 const meta: Meta<typeof Error> = {
-  title: 'Components/Error',
+  title: 'UI/Error',
   component: Error,
   tags: ['autodocs'],
   argTypes: {

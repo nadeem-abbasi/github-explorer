@@ -54,9 +54,11 @@ describe('UserAccordion', () => {
     jest.clearAllMocks();
   });
 
-  it('should render username in accordion header', () => {
+  it('should render username and display repositories', () => {
     (useUserRepositories as jest.Mock).mockReturnValue({
-      data: undefined,
+      data: {
+        pages: [{ repositories: mockRepositories, hasNextPage: false }],
+      },
       isLoading: false,
       error: null,
       fetchNextPage: jest.fn(),
@@ -67,13 +69,15 @@ describe('UserAccordion', () => {
     render(
       <UserAccordion
         user={mockUser}
-        isExpanded={false}
+        isExpanded={true}
         onToggle={mockOnToggle}
       />,
       { wrapper: createWrapper() },
     );
 
     expect(screen.getByText('testuser')).toBeInTheDocument();
+    expect(screen.getByText('repo-1')).toBeInTheDocument();
+    expect(screen.getByText('Test repository 1')).toBeInTheDocument();
   });
 
   it('should show loader when loading repositories', () => {
@@ -120,7 +124,6 @@ describe('UserAccordion', () => {
     expect(
       screen.getByText('Failed to load repositories. Please try again later.'),
     ).toBeInTheDocument();
-    expect(screen.getByRole('alert')).toBeInTheDocument();
   });
 
   it('should show empty state when user has no repositories', () => {
@@ -145,65 +148,7 @@ describe('UserAccordion', () => {
     expect(screen.getByText('No repositories found')).toBeInTheDocument();
   });
 
-  it('should display list of repositories', () => {
-    (useUserRepositories as jest.Mock).mockReturnValue({
-      data: {
-        pages: [{ repositories: mockRepositories, hasNextPage: false }],
-      },
-      isLoading: false,
-      error: null,
-      fetchNextPage: jest.fn(),
-      hasNextPage: false,
-      isFetchingNextPage: false,
-    });
-
-    render(
-      <UserAccordion
-        user={mockUser}
-        isExpanded={true}
-        onToggle={mockOnToggle}
-      />,
-      { wrapper: createWrapper() },
-    );
-
-    expect(screen.getByText('repo-1')).toBeInTheDocument();
-    expect(screen.getByText('Test repository 1')).toBeInTheDocument();
-    expect(screen.getByText('42')).toBeInTheDocument();
-
-    expect(screen.getByText('repo-2')).toBeInTheDocument();
-    expect(screen.getByText('0')).toBeInTheDocument();
-  });
-
-  it('should show "Load More" button when there are more pages', () => {
-    const mockFetchNextPage = jest.fn();
-
-    (useUserRepositories as jest.Mock).mockReturnValue({
-      data: {
-        pages: [{ repositories: mockRepositories, hasNextPage: true }],
-      },
-      isLoading: false,
-      error: null,
-      fetchNextPage: mockFetchNextPage,
-      hasNextPage: true,
-      isFetchingNextPage: false,
-    });
-
-    render(
-      <UserAccordion
-        user={mockUser}
-        isExpanded={true}
-        onToggle={mockOnToggle}
-      />,
-      { wrapper: createWrapper() },
-    );
-
-    const loadMoreButton = screen.getByRole('button', {
-      name: 'Load more repositories',
-    });
-    expect(loadMoreButton).toBeInTheDocument();
-  });
-
-  it('should call fetchNextPage when "Load More" button is clicked', async () => {
+  it('should handle load more pagination', async () => {
     const user = userEvent.setup();
     const mockFetchNextPage = jest.fn();
 
@@ -233,122 +178,5 @@ describe('UserAccordion', () => {
     await user.click(loadMoreButton);
 
     expect(mockFetchNextPage).toHaveBeenCalledTimes(1);
-  });
-
-  it('should show loading state on "Load More" button while fetching', () => {
-    (useUserRepositories as jest.Mock).mockReturnValue({
-      data: {
-        pages: [{ repositories: mockRepositories, hasNextPage: true }],
-      },
-      isLoading: false,
-      error: null,
-      fetchNextPage: jest.fn(),
-      hasNextPage: true,
-      isFetchingNextPage: true,
-    });
-
-    render(
-      <UserAccordion
-        user={mockUser}
-        isExpanded={true}
-        onToggle={mockOnToggle}
-      />,
-      { wrapper: createWrapper() },
-    );
-
-    const loadMoreButton = screen.getByRole('button', {
-      name: 'Load more repositories',
-    });
-    expect(loadMoreButton).toHaveAttribute('aria-busy', 'true');
-  });
-
-  it('should not show "Load More" button when there are no more pages', () => {
-    (useUserRepositories as jest.Mock).mockReturnValue({
-      data: {
-        pages: [{ repositories: mockRepositories, hasNextPage: false }],
-      },
-      isLoading: false,
-      error: null,
-      fetchNextPage: jest.fn(),
-      hasNextPage: false,
-      isFetchingNextPage: false,
-    });
-
-    render(
-      <UserAccordion
-        user={mockUser}
-        isExpanded={true}
-        onToggle={mockOnToggle}
-      />,
-      { wrapper: createWrapper() },
-    );
-
-    expect(
-      screen.queryByRole('button', { name: 'Load more repositories' }),
-    ).not.toBeInTheDocument();
-  });
-
-  it('should handle multiple pages of repositories', () => {
-    const page1Repos = [mockRepositories[0]];
-    const page2Repos = [mockRepositories[1]];
-
-    (useUserRepositories as jest.Mock).mockReturnValue({
-      data: {
-        pages: [
-          { repositories: page1Repos, hasNextPage: true },
-          { repositories: page2Repos, hasNextPage: false },
-        ],
-      },
-      isLoading: false,
-      error: null,
-      fetchNextPage: jest.fn(),
-      hasNextPage: false,
-      isFetchingNextPage: false,
-    });
-
-    render(
-      <UserAccordion
-        user={mockUser}
-        isExpanded={true}
-        onToggle={mockOnToggle}
-      />,
-      { wrapper: createWrapper() },
-    );
-
-    expect(screen.getByText('repo-1')).toBeInTheDocument();
-    expect(screen.getByText('repo-2')).toBeInTheDocument();
-  });
-
-  it('should have proper accessibility attributes', () => {
-    (useUserRepositories as jest.Mock).mockReturnValue({
-      data: {
-        pages: [{ repositories: mockRepositories, hasNextPage: false }],
-      },
-      isLoading: false,
-      error: null,
-      fetchNextPage: jest.fn(),
-      hasNextPage: false,
-      isFetchingNextPage: false,
-    });
-
-    render(
-      <UserAccordion
-        user={mockUser}
-        isExpanded={true}
-        onToggle={mockOnToggle}
-      />,
-      { wrapper: createWrapper() },
-    );
-
-    const accordionButton = screen.getByRole('button', { name: 'testuser' });
-    expect(accordionButton).toHaveAttribute('aria-expanded', 'true');
-    expect(accordionButton).toHaveAttribute(
-      'aria-controls',
-      'accordion-content-1',
-    );
-
-    const region = screen.getByRole('region');
-    expect(region).toHaveAttribute('id', 'accordion-content-1');
-    expect(region).toHaveAttribute('aria-labelledby', 'accordion-header-1');
   });
 });

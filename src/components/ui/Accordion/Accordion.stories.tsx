@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Accordion } from './Accordion';
 
 const meta = {
-  title: 'Components/Accordion',
+  title: 'UI/Accordion',
   component: Accordion,
   parameters: {
     layout: 'padded',

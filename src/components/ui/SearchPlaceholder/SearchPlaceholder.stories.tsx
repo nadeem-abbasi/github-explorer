@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react';
 import { SearchPlaceholder } from './SearchPlaceholder';
 
 const meta = {
-  title: 'Components/SearchPlaceholder',
+  title: 'UI/SearchPlaceholder',
   component: SearchPlaceholder,
   parameters: {
     layout: 'centered',

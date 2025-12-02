@@ -51,10 +51,35 @@ describe('githubApi', () => {
         ok: false,
         status: 403,
         statusText: 'Forbidden',
+        headers: {
+          get: (name: string) => {
+            if (name === 'X-RateLimit-Remaining') {
+              return '0';
+            }
+            return null;
+          },
+        },
+        json: async () => ({}),
       });
 
       await expect(searchUsers('test')).rejects.toThrow(
         'API rate limit exceeded. Please try again later or add a GitHub token for higher limits.',
+      );
+    });
+
+    it('should handle permission errors (403 without rate limit)', async () => {
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: false,
+        status: 403,
+        statusText: 'Forbidden',
+        headers: {
+          get: () => null,
+        },
+        json: async () => ({}),
+      });
+
+      await expect(searchUsers('test')).rejects.toThrow(
+        'Access forbidden. Please check your GitHub token permissions.',
       );
     });
 
@@ -181,10 +206,35 @@ describe('githubApi', () => {
         ok: false,
         status: 403,
         statusText: 'Forbidden',
+        headers: {
+          get: (name: string) => {
+            if (name === 'X-RateLimit-Remaining') {
+              return '0';
+            }
+            return null;
+          },
+        },
+        json: async () => ({}),
       });
 
       await expect(getUserRepositories('testuser')).rejects.toThrow(
         'API rate limit exceeded. Please try again later or add a GitHub token for higher limits.',
+      );
+    });
+
+    it('should handle permission errors (403 without rate limit)', async () => {
+      (fetch as jest.Mock).mockResolvedValueOnce({
+        ok: false,
+        status: 403,
+        statusText: 'Forbidden',
+        headers: {
+          get: () => null,
+        },
+        json: async () => ({}),
+      });
+
+      await expect(getUserRepositories('testuser')).rejects.toThrow(
+        'Access forbidden. Please check your GitHub token permissions.',
       );
     });
 

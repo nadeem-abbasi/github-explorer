@@ -1,4 +1,3 @@
-import { beforeEach, describe, it } from 'node:test';
 import { getUserRepositories, searchUsers } from './githubApi';
 import type { Repository, SearchUsersResponse } from './types';
 

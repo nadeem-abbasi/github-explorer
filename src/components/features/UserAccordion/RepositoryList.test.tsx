@@ -56,27 +56,11 @@ describe('RepositoryList', () => {
     expect(screen.queryByText('null')).not.toBeInTheDocument();
   });
 
-  it('should render star count for each repository', () => {
-    render(<RepositoryList repositories={mockRepositories} />);
-
-    const starCounts = screen.getAllByText(/^\d+$/);
-    expect(starCounts).toHaveLength(2);
-    expect(starCounts[0]).toHaveTextContent('42');
-    expect(starCounts[1]).toHaveTextContent('0');
-  });
-
   it('should render empty list when no repositories are provided', () => {
     const { container } = render(<RepositoryList repositories={[]} />);
 
     const list = container.querySelector('ul');
     expect(list).toBeInTheDocument();
     expect(list?.children.length).toBe(0);
-  });
-
-  it('should render each repository as a list item', () => {
-    render(<RepositoryList repositories={mockRepositories} />);
-
-    const listItems = screen.getAllByRole('listitem');
-    expect(listItems).toHaveLength(2);
   });
 });

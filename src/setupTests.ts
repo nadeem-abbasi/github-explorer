@@ -1,6 +1,5 @@
 import '@testing-library/jest-dom';
 
-// Mock IntersectionObserver
 (global as any).IntersectionObserver = class IntersectionObserver {
   constructor() {}
   disconnect() {}
@@ -11,7 +10,6 @@ import '@testing-library/jest-dom';
   unobserve() {}
 };
 
-// Mock window.matchMedia
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
   value: (query: string) => ({

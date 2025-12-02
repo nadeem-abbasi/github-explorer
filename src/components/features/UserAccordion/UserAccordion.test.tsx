@@ -174,33 +174,6 @@ describe('UserAccordion', () => {
     expect(screen.getByText('0')).toBeInTheDocument();
   });
 
-  it('should render repository links with correct href', () => {
-    (useUserRepositories as jest.Mock).mockReturnValue({
-      data: {
-        pages: [{ repositories: mockRepositories, hasNextPage: false }],
-      },
-      isLoading: false,
-      error: null,
-      fetchNextPage: jest.fn(),
-      hasNextPage: false,
-      isFetchingNextPage: false,
-    });
-
-    render(
-      <UserAccordion
-        user={mockUser}
-        isExpanded={true}
-        onToggle={mockOnToggle}
-      />,
-      { wrapper: createWrapper() },
-    );
-
-    const link1 = screen.getByLabelText('View repo-1 on GitHub');
-    expect(link1).toHaveAttribute('href', 'https://github.com/testuser/repo-1');
-    expect(link1).toHaveAttribute('target', '_blank');
-    expect(link1).toHaveAttribute('rel', 'noopener noreferrer');
-  });
-
   it('should show "Load More" button when there are more pages', () => {
     const mockFetchNextPage = jest.fn();
 

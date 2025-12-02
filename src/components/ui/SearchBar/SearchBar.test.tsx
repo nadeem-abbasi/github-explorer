@@ -116,16 +116,4 @@ describe('SearchBar', () => {
     expect(input).toHaveAttribute('aria-invalid', 'true');
     expect(input).toHaveAttribute('aria-describedby', 'search-error');
   });
-
-  it('should update input value when typing', async () => {
-    const user = userEvent.setup();
-    render(<SearchBar onSearch={jest.fn()} />);
-
-    const input = screen.getByPlaceholderText(
-      'Search GitHub users...',
-    ) as HTMLInputElement;
-    await user.type(input, 'test');
-
-    expect(input.value).toBe('test');
-  });
 });

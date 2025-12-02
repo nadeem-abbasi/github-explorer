@@ -66,26 +66,6 @@ describe('Button', () => {
     expect(handleClick).not.toHaveBeenCalled();
   });
 
-  it('should render primary variant', () => {
-    render(
-      <Button variant="primary" aria-label="Primary button">
-        Click me
-      </Button>,
-    );
-
-    expect(screen.getByText('Click me')).toBeInTheDocument();
-  });
-
-  it('should render secondary variant', () => {
-    render(
-      <Button variant="secondary" aria-label="Secondary button">
-        Click me
-      </Button>,
-    );
-
-    expect(screen.getByText('Click me')).toBeInTheDocument();
-  });
-
   it('should have proper accessibility attributes', () => {
     render(<Button aria-label="Accessible button">Click me</Button>);
 

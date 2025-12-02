@@ -42,6 +42,9 @@
   font-size: var(--font-size-md);
   font-weight: 600;
   color: var(--color-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .repositoryStars {
@@ -64,6 +67,30 @@
   font-size: var(--font-size-sm);
   color: var(--color-text-secondary);
   line-height: var(--line-height-base);
+  word-break: break-word;
+}
+
+.loadMoreButton {
+  background: none;
+  border: none;
+  color: var(--color-primary);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  text-decoration: underline;
+  transition: opacity 0.2s ease;
+  display: inline;
+}
+
+.loadMoreButton:hover {
+  opacity: 0.8;
+}
+
+.loadMoreButton:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
 .error {

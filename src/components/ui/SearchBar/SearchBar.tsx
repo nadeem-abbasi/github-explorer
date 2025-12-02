@@ -36,8 +36,12 @@ export const SearchBar: FC<SearchBarProps> = ({
 
   return (
     <form className={styles.searchBar} onSubmit={handleSubmit}>
+      <label htmlFor="github-search" className={styles.label}>
+        Search Users
+      </label>
       <div className={styles.inputWrapper}>
         <Input
+          id="github-search"
           value={query}
           onChange={handleChange}
           placeholder="Search GitHub users..."

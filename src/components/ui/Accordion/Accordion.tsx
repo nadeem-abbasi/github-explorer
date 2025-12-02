@@ -11,6 +11,15 @@ export type AccordionProps = {
   headerId?: string;
 };
 
+const MAX_TITLE_LENGTH = 20;
+
+const truncateTitle = (title: string): string => {
+  if (title.length <= MAX_TITLE_LENGTH) {
+    return title;
+  }
+  return `${title.slice(0, MAX_TITLE_LENGTH)}...`;
+};
+
 export const Accordion: FC<AccordionProps> = ({
   title,
   isExpanded,
@@ -19,6 +28,9 @@ export const Accordion: FC<AccordionProps> = ({
   contentId,
   headerId,
 }: AccordionProps) => {
+  const displayTitle = truncateTitle(title);
+  const shouldShowTooltip = title.length > MAX_TITLE_LENGTH;
+
   return (
     <div className={styles.accordion}>
       <button
@@ -28,7 +40,12 @@ export const Accordion: FC<AccordionProps> = ({
         aria-expanded={isExpanded}
         aria-controls={contentId}
       >
-        <span className={styles.username}>{title}</span>
+        <span
+          className={styles.username}
+          title={shouldShowTooltip ? title : undefined}
+        >
+          {displayTitle}
+        </span>
         <ChevronDownIcon
           className={`${styles.caret} ${
             isExpanded ? styles.caretExpanded : ''

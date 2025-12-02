@@ -1,0 +1,19 @@
+.header {
+  background: linear-gradient(135deg, var(--color-primary) 0%, #0550ae 100%);
+  color: white;
+  padding: var(--spacing-xl) var(--spacing-md);
+  text-align: center;
+  box-shadow: var(--shadow-md);
+}
+
+.title {
+  margin: 0 0 var(--spacing-sm) 0;
+  font-size: var(--font-size-xl);
+  font-weight: 700;
+}
+
+.subtitle {
+  margin: 0;
+  font-size: var(--font-size-md);
+  opacity: 0.95;
+}

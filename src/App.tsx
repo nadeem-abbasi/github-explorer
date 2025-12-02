@@ -1,18 +1,87 @@
+import type { FC } from 'react';
 import { useMemo, useState } from 'react';
+import type { User } from './api/types';
 import styles from './App.module.css';
 import { UserAccordion } from './components/features/UserAccordion/UserAccordion';
 import { Button } from './components/ui/Button/Button';
 import { Error } from './components/ui/Error/Error';
+import { Header } from './components/ui/Header/Header';
 import { Loader } from './components/ui/Loader/Loader';
 import { SearchBar } from './components/ui/SearchBar/SearchBar';
 import { SearchPlaceholder } from './components/ui/SearchPlaceholder/SearchPlaceholder';
 import { useDebounce } from './hooks/useDebounce';
 import { useSearchUsers } from './hooks/useSearchUsers';
 
-function App() {
+const SEARCH_DEBOUNCE_MS = 500;
+
+type LoadMoreButtonProps = {
+  hasNextPage: boolean;
+  isFetchingNextPage: boolean;
+  onLoadMore: () => void;
+};
+
+const LoadMoreButton: FC<LoadMoreButtonProps> = ({
+  hasNextPage,
+  isFetchingNextPage,
+  onLoadMore,
+}) => {
+  if (!hasNextPage) return null;
+
+  return (
+    <div className={styles.loadMoreContainer}>
+      <Button onClick={onLoadMore} loading={isFetchingNextPage}>
+        Load More Users
+      </Button>
+    </div>
+  );
+};
+
+type SearchResultsProps = {
+  users: User[];
+  expandedUserId: number | null;
+  onToggle: (userId: number) => void;
+  hasNextPage: boolean;
+  isFetchingNextPage: boolean;
+  onLoadMore: () => void;
+};
+
+const SearchResults: FC<SearchResultsProps> = ({
+  users,
+  expandedUserId,
+  onToggle,
+  hasNextPage,
+  isFetchingNextPage,
+  onLoadMore,
+}) => {
+  return (
+    <>
+      <div className={styles.resultsHeader}>
+        <h2 className={styles.resultsLabel}>Search Results</h2>
+      </div>
+      <div className={styles.userList}>
+        {users.map((user) => (
+          <UserAccordion
+            key={user.id}
+            user={user}
+            isExpanded={expandedUserId === user.id}
+            onToggle={() => onToggle(user.id)}
+          />
+        ))}
+      </div>
+
+      <LoadMoreButton
+        hasNextPage={hasNextPage}
+        isFetchingNextPage={isFetchingNextPage}
+        onLoadMore={onLoadMore}
+      />
+    </>
+  );
+};
+
+const App: FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [expandedUserId, setExpandedUserId] = useState<number | null>(null);
-  const debouncedQuery = useDebounce(searchQuery, 500);
+  const debouncedQuery = useDebounce(searchQuery, SEARCH_DEBOUNCE_MS);
 
   const {
     data,
@@ -30,7 +99,7 @@ function App() {
 
   const handleSearch = (query: string) => {
     setSearchQuery(query);
-    setExpandedUserId(null); // Close any open accordion when searching
+    setExpandedUserId(null);
   };
 
   const handleToggle = (userId: number) => {
@@ -48,12 +117,7 @@ function App() {
 
   return (
     <div className={styles.app}>
-      <header className={styles.header}>
-        <h1 className={styles.title}>GitHub User Explorer</h1>
-        <p className={styles.subtitle}>
-          Search for GitHub users and explore their repositories
-        </p>
-      </header>
+      <Header />
 
       <main className={styles.main}>
         <div className={styles.searchContainer}>
@@ -71,13 +135,7 @@ function App() {
 
           {error && (
             <Error
-              message={
-                typeof error === 'object' &&
-                error !== null &&
-                'message' in error
-                  ? (error as Error).message
-                  : 'An error occurred while searching'
-              }
+              message={error?.message || 'An error occurred while searching'}
               onRetry={handleRetry}
             />
           )}
@@ -89,35 +147,19 @@ function App() {
           )}
 
           {allUsers.length > 0 && (
-            <>
-              <div className={styles.userList}>
-                {allUsers.map((user) => (
-                  <UserAccordion
-                    key={user.id}
-                    user={user}
-                    isExpanded={expandedUserId === user.id}
-                    onToggle={() => handleToggle(user.id)}
-                  />
-                ))}
-              </div>
-
-              {hasNextPage && (
-                <div className={styles.loadMoreContainer}>
-                  <Button
-                    onClick={() => fetchNextPage()}
-                    loading={isFetchingNextPage}
-                    disabled={isFetchingNextPage}
-                  >
-                    Load More Users
-                  </Button>
-                </div>
-              )}
-            </>
+            <SearchResults
+              users={allUsers}
+              expandedUserId={expandedUserId}
+              onToggle={handleToggle}
+              hasNextPage={hasNextPage}
+              isFetchingNextPage={isFetchingNextPage}
+              onLoadMore={() => fetchNextPage()}
+            />
           )}
         </div>
       </main>
     </div>
   );
-}
+};
 
 export default App;

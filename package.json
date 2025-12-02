@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:all": "npm run build && npm run build-storybook && npm run copy-storybook",
+    "copy-storybook": "mkdir -p dist/storybook && cp -r storybook-static/* dist/storybook/",
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "jest",

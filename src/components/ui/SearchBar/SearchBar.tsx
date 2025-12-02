@@ -50,15 +50,15 @@ export const SearchBar: FC<SearchBarProps> = ({
           aria-invalid={error ? 'true' : 'false'}
           aria-describedby={error ? 'search-error' : undefined}
         />
+        <Button type="submit" loading={isLoading}>
+          Search
+        </Button>
         {error && (
           <span id="search-error" className={styles.error} role="alert">
             {error}
           </span>
         )}
       </div>
-      <Button type="submit" loading={isLoading}>
-        Search
-      </Button>
     </form>
   );
 };

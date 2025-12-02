@@ -14,7 +14,6 @@ jest.mock('./api/config', () => ({
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { afterEach, beforeEach, describe, it } from 'node:test';
 import App from './App';
 import { useDebounce } from './hooks/useDebounce';
 import { useSearchUsers } from './hooks/useSearchUsers';
